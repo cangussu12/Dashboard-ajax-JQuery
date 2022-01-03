@@ -40,6 +40,12 @@ $(document).ready(() => {
            success: dados => {
                $('#numeroVendas').html(dados.numeroVendas)
                $('#totalVendas').html(dados.totalVendas)
+               $('#ativos').html(dados.ativos)
+               $('#inativos').html(dados.inativos)
+               $('#reclamacoes').html(dados.reclamacoes)
+               $('#elogios').html(dados.elogios)
+               $('#sugestoes').html(dados.sugestoes)
+               $('#totalDespesas').html(dados.totalDespesas)
             },
            error: erro => {console.log(erro)}
        })

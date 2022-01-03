@@ -88,6 +88,98 @@ class Bd {
 
 		return $stmt->fetch(PDO::FETCH_OBJ)->total_vendas;
 	}
+
+	public function getClientesAtivos() {
+		$query = '
+		SELECT 
+			COUNT(cliente_ativo) as ativos 
+		from 
+			tb_clientes 
+		where 
+			cliente_ativo = 1';
+
+		$stmt = $this->conexao->prepare($query);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ)->ativos;
+	}
+
+	public function getClientesInativos() {
+		$query = '
+		SELECT 
+			COUNT(cliente_ativo) as inativos 
+		from 
+			tb_clientes 
+		where 
+			cliente_ativo = 0';
+
+		$stmt = $this->conexao->prepare($query);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ)->inativos;
+	}
+
+	public function getReclamacoes() {
+		$query = '
+		SELECT 
+			COUNT(tipo_contato) as reclamacoes
+		FROM 
+			tb_contatos 
+		WHERE 
+			tipo_contato = 1';
+
+		$stmt = $this->conexao->prepare($query);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ)->reclamacoes;
+	}
+
+	public function getElogios() {
+		$query = '
+		SELECT 
+			COUNT(tipo_contato) as elogios
+		FROM 
+			tb_contatos 
+		WHERE 
+			tipo_contato = 2';
+
+		$stmt = $this->conexao->prepare($query);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ)->elogios;
+	}
+
+	public function getSugestoes() {
+		$query = '
+		SELECT 
+			COUNT(tipo_contato) as sugestoes
+		FROM 
+			tb_contatos 
+		WHERE 
+			tipo_contato = 3';
+
+		$stmt = $this->conexao->prepare($query);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ)->sugestoes;
+	}
+
+	public function getTotalDespesas() {
+		$query = '
+			select 
+				SUM(total) as total_despesas
+			from 
+				tb_despesas 
+			where 
+				data_despesa between :data_inicio and :data_fim';
+
+		$stmt = $this->conexao->prepare($query);
+		$stmt->bindValue(':data_inicio', $this->dashboard->__get('data_inicio'));
+		$stmt->bindValue(':data_fim', $this->dashboard->__get('data_fim'));
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ)->total_despesas;
+	}
 }
 
 
@@ -110,6 +202,12 @@ $bd = new Bd($conexao, $dashboard);
 
 $dashboard->__set('numeroVendas', $bd->getNumeroVendas());
 $dashboard->__set('totalVendas', $bd->getTotalVendas());
+$dashboard->__set('ativos', $bd->getClientesAtivos());
+$dashboard->__set('inativos', $bd->getClientesInativos());
+$dashboard->__set('reclamacoes', $bd->getReclamacoes());
+$dashboard->__set('elogios', $bd->getElogios());
+$dashboard->__set('sugestoes', $bd->getSugestoes());
+$dashboard->__set('totalDespesas', $bd->getTotalDespesas());
 echo json_encode($dashboard);
 
 
