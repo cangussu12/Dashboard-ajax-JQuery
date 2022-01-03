@@ -31,7 +31,7 @@ $(document).ready(() => {
     $('#competencia').on('change', e => {
 
       let competencia = $(e.target).val()
-      console.log(competencia)
+      
        $.ajax({
            type: 'GET',
            url: 'app.php',
